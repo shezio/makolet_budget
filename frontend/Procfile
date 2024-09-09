@@ -1,0 +1,4 @@
+web: cd backend && gunicorn your_django_project.wsgi --log-file -
+release: cd frontend && npm install && npm run build
+heroku buildpacks:add heroku/nodejs
+heroku buildpacks:add heroku/python
