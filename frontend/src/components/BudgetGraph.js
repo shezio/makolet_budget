@@ -22,7 +22,7 @@ const BudgetGraph = () => {
     }, [month, year]);
 
     const fetchBudgetData = () => {
-        axios.get(`/budget/get_budget/?month=${month}&year=${year}`)
+        axios.get(`http://127.0.0.1:8000/budget/get_budget/?month=${month}&year=${year}`)
             .then(response => {
                 setBudgetData(response.data);
             })
@@ -32,7 +32,7 @@ const BudgetGraph = () => {
     };
 
     const handleLimitChange = () => {
-        axios.post('/budget/update_budget_limit/', { limit: newLimit })
+        axios.post('http://127.0.0.1:8000/budget/update_budget_limit/', { limit: newLimit })
             .then(response => {
                 fetchBudgetData();
             })
@@ -42,7 +42,7 @@ const BudgetGraph = () => {
     };
 
     const handlePurchase = () => {
-        axios.post('/budget/add_purchase/', { amount: purchaseAmount })
+        axios.post('http://127.0.0.1:8000/budget/add_purchase/', { amount: purchaseAmount })
             .then(response => {
                 fetchBudgetData();
             })
@@ -61,6 +61,16 @@ const BudgetGraph = () => {
                 hoverOffset: 4,
             },
         ],
+    };
+
+    const options = {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                position: 'top',
+            },
+        },
     };
 
     return (
@@ -91,7 +101,9 @@ const BudgetGraph = () => {
                 </label>
                 <button onClick={fetchBudgetData}>Fetch Data</button>
             </div>
-            <Pie data={data} />
+            <div style={{ width: '50%', height: '50%' }}>
+                <Pie data={data} options={options} />
+            </div>
         </div>
     );
 };

@@ -1,33 +1,43 @@
-import json
+import logging
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from .models import Purchase, Budget
+import json
 from datetime import datetime
 from pathlib import Path
+from decimal import Decimal
 
 # Load configuration
 config_path = Path(__file__).resolve().parent / 'config.json'
 with open(config_path) as config_file:
     config = json.load(config_file)
 
+# Set up logging
+logger = logging.getLogger(__name__)
+
 @csrf_exempt
 def add_purchase(request):
     if request.method == 'POST':
-        data = json.loads(request.body)
-        amount = data.get('amount')
-        date = data.get('date', datetime.now())
-        budget = Budget.objects.first()
-        current_month = datetime.now().month
+        try:
+            data = json.loads(request.body)
+            amount = Decimal(data.get('amount'))
+            date = data.get('date', datetime.now())
+            budget = Budget.objects.first()
+            current_month = datetime.now().month
 
-        if budget.current_month_spent + amount > budget.limit:
-            return JsonResponse({'error': 'Purchase exceeds the remaining budget'}, status=400)
+            if budget.current_month_spent + amount > budget.limit:
+                return JsonResponse({'error': 'Purchase exceeds the remaining budget'}, status=400)
 
-        Purchase.objects.create(amount=amount, date=date)
-        budget.current_month_spent += amount
-        budget.save()
-        return JsonResponse({'status': 'success'}, status=201)
+            Purchase.objects.create(amount=amount, date=date)
+            budget.current_month_spent += amount
+            budget.save()
+            return JsonResponse({'status': 'success'}, status=201)
+        except Exception as e:
+            logger.error(f"Error adding purchase: {e}")
+            return JsonResponse({'error': 'Internal server error'}, status=500)
     return JsonResponse({'error': 'Invalid request'}, status=400)
+
 
 @csrf_exempt
 def update_budget_limit(request):
