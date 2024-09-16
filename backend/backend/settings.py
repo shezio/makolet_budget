@@ -14,6 +14,15 @@ import os
 from pathlib import Path
 import logging
 import logging.handlers
+import signal
+from django.db import connections
+
+def close_connections():
+    for conn in connections.all():
+        conn.close()
+
+signal.signal(signal.SIGTERM, lambda signum, frame: close_connections())
+signal.signal(signal.SIGINT, lambda signum, frame: close_connections())
 
 LOGGING = {
     'version': 1,

@@ -5,7 +5,7 @@ class Command(BaseCommand):
     help = 'Truncate all tables in the database'
 
     def handle(self, *args, **kwargs):
-        tables = ['public.budget_budget', 'public.purchase']
+        tables = ['public.budget', 'public.purchase']
         with connection.cursor() as cursor:
             for table in tables:
                 try:

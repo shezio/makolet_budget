@@ -1,6 +1,6 @@
 /* DROP and CREATE will run in psql
     GRANT will run in pgAdmin
-    */
+   
 
 -- Drop the database if it exists
 DROP DATABASE IF EXISTS makoletdb;
@@ -29,7 +29,7 @@ CREATE USER makoletuser WITH PASSWORD '0192pqowL@';
 ALTER ROLE makoletuser SET client_encoding TO 'utf8';
 ALTER ROLE makoletuser SET default_transaction_isolation TO 'read committed';
 ALTER ROLE makoletuser SET timezone TO 'UTC';
-
+ */
 -- Grant all privileges on the database
 GRANT ALL PRIVILEGES ON DATABASE makoletdb TO makoletuser;
 
