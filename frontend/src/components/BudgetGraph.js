@@ -32,7 +32,7 @@ const BudgetGraph = () => {
     };
 
     const handleLimitChange = () => {
-        axios.post('http://127.0.0.1:8000/budget/update_budget_limit/', { limit: newLimit })
+        axios.post('http://127.0.0.1:8000/budget/update_budget_limit/', { limit: newLimit, month, year })
             .then(response => {
                 fetchBudgetData();
             })
@@ -40,16 +40,16 @@ const BudgetGraph = () => {
                 console.error('There was an error updating the budget limit!', error);
             });
     };
-
+    
     const handlePurchase = () => {
-        axios.post('http://127.0.0.1:8000/budget/add_purchase/', { amount: purchaseAmount })
+        axios.post('http://127.0.0.1:8000/budget/add_purchase/', { amount: purchaseAmount, date: `${year}-${month}-01` })
             .then(response => {
                 fetchBudgetData();
             })
             .catch(error => {
                 console.error('There was an error adding the purchase!', error);
             });
-    };
+    };    
 
     const data = {
         labels: ['Spent', 'Remaining'],
